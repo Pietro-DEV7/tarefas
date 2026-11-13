@@ -1,27 +1,32 @@
 
-<!DOCTYPE html>
-<html lang="pt-br">
+    <!DOCTYPE html>
+    <html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ titulo_da_pagina }}</title>
+        <title>{{ titulo_da_pagina }}</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
 
-<body>
+    <body>
 
-    <h1>Digite a tarefa e a data de conclusão (opcional):</h1>
+        <h1>Digite a tarefa e a data de conclusão (opcional):</h1>
 
-    <form method="POST">
+
+    <form
+        method="POST"
+        action="{% if tarefa_em_edicao %}{{ url_for('editar', id_tarefa=tarefa_em_edicao.id) }}{% else %}{{ url_for('home') }}{% endif %}"
+    >
 
         <input
             type="text"
             id="tituloTarefa"
             name="tituloTarefa"
             placeholder="Digite sua tarefa"
+            value="{{ tarefa_em_edicao.titulo if tarefa_em_edicao else '' }}"
             required
         >
 
@@ -29,35 +34,42 @@
             type="date"
             id="dataConclusao"
             name="dataConclusao"
+            value="{{ tarefa_em_edicao.data_conclusao.strftime('%Y-%m-%d') if tarefa_em_edicao and tarefa_em_edicao.data_conclusao else '' }}"
         >
 
-        <button type="submit">Adicionar</button>
+        <button type="submit">
+            {{ 'Atualizar' if tarefa_em_edicao else 'Adicionar' }}
+        </button>
 
     </form>
 
-    <ul id="listaTarefas">
+        <ul id="listaTarefas">
 
-        {% for tarefa in tarefas_da_pagina %}
+            {% for tarefa in tarefas_da_pagina %}
 
-            <li>
+                <li>
 
-                <span>
-                    {{ tarefa.titulo_tarefa }} - {{ tarefa.data_conclusao }}
-                </span>
+                    <span>
+                        {{ tarefa.titulo_tarefa }} - {{ tarefa.data_conclusao }}
+                    </span>
 
-                <form
-                    action="{{ url_for('apagar', id_tarefa=tarefa.id_tarefa) }}"
-                    method="POST"
-                    class="form-apagar"
-                >
-                    <button type="submit">Apagar</button>
-                </form>
+                    <a href="{{ url_for('editar', id_tarefa=tarefa.id_tarefa) }}">
+                    Editar
+                </a>
 
-            </li>
+                    <form
+                        action="{{ url_for('apagar', id_tarefa=tarefa.id_tarefa) }}"
+                        method="POST"
+                        class="form-apagar"
+                    >
+                        <button type="submit">Apagar</button>
+                    </form>
 
-        {% endfor %}
+                </li>
 
-    </ul>
+            {% endfor %}
 
-</body>
-</html>
+        </ul>
+
+    </body>
+    </html>

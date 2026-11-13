@@ -15,7 +15,7 @@ class Tarefa:
         self.data_conclusao = data_conclusao
 
     def salvarTarefa(self):
-        """Salva a tarefa no banco de dados"""
+        """Salva a tarefa no banco de dados."""
 
         sql = '''
             INSERT INTO tarefa
@@ -34,7 +34,7 @@ class Tarefa:
 
     @staticmethod
     def listarTarefas() -> list:
-        """Lista as tarefas cadastradas"""
+        """Lista as tarefas cadastradas."""
 
         sql = '''
             SELECT
@@ -51,8 +51,57 @@ class Tarefa:
         return tarefas_banco if tarefas_banco else []
 
     @staticmethod
+    def carregarTarefa(id_tarefa):
+        """Carrega uma tarefa específica do banco de dados."""
+
+        sql = '''
+            SELECT
+                id_tarefa,
+                titulo_tarefa,
+                data_tarefa AS data_conclusao
+            FROM tarefa
+            WHERE id_tarefa = %s;
+        '''
+
+        params = (id_tarefa,)
+
+        with Database() as db:
+            resultado = db.executar(sql, params)
+
+        if resultado:
+            dados = resultado[0]
+
+            return Tarefa(
+                id=dados['id_tarefa'],
+                titulo=dados['titulo_tarefa'],
+                data_conclusao=dados['data_conclusao']
+            )
+
+        return None
+
+    def atualizarTarefa(self):
+        """Atualiza uma tarefa no banco de dados."""
+
+        sql = '''
+            UPDATE tarefa
+            SET
+                titulo_tarefa = %s,
+                data_tarefa = %s
+            WHERE id_tarefa = %s;
+        '''
+
+        params = (
+            self.titulo,
+            self.data_conclusao,
+            self.id
+        )
+
+        with Database() as db:
+            db.executar(sql, params)
+
+    @staticmethod
     def apagarTarefa(id_tarefa):
-        """Apaga uma tarefa do banco de dados"""
+        """Apaga uma tarefa do banco de dados."""
 
         sql = 'DELETE FROM tarefa WHERE id_tarefa = %s;'
 
@@ -60,8 +109,3 @@ class Tarefa:
 
         with Database() as db:
             db.executar(sql, params)
-
-
-# Teste
-# tarefa = Tarefa('Minha nova tarefa')
-# tarefa.salvarTarefa()
