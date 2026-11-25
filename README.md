@@ -13,6 +13,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 ```bash 
 UV init 
 ```
+.
 
 3. Crie ambiente virtual:
 ``` bash
