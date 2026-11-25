@@ -13,6 +13,7 @@ class Database:
         self.username = getenv('DB_USER')
         self.password = getenv('DB_PASSWORD')
         self.database = getenv('DB_SCHEMA')
+        self.port = getenv('DB_PORT') or 3306
         self.connection = None
         self.cursor = None
 
@@ -20,6 +21,7 @@ class Database:
         try:
             self.connection = mc.connect(
                 host = self.host,
+                port = self.port,
                 database = self.database,
                 user = self.username,
                 password = self.password
