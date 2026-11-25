@@ -16,7 +16,6 @@ def test():
 
 @app.route('/apagar/<int:id_tarefa>', methods=['POST'])
 def apagar(id_tarefa):
-
     Tarefa.apagarTarefa(id_tarefa)
 
     return redirect(url_for('home'))
@@ -24,17 +23,14 @@ def apagar(id_tarefa):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-
     if request.method == 'POST':
         titulo_form = request.form['tituloTarefa']
         data_conclusao_form = request.form['dataConclusao']
 
         data_corrigida = data_conclusao_form if data_conclusao_form != '' else None
 
-        # Instanciamos uma nova tarefa com os dados recebidos do form
         tarefa = Tarefa(titulo=titulo_form, data_conclusao=data_corrigida)
-    
-        # Salvamos a tarefa no banco
+
         tarefa.salvarTarefa()
 
         return redirect(url_for('home'))
@@ -49,24 +45,14 @@ def home():
     )
 
 
-"""criar rota de editar tarefa."""
-
-"""<int:id_tarefa>: recebe um número inteiro pela URL."""
-"""methods: determina quais métodos HTTP serão aceitos. Usei GET e POST, como sugerido."""
 @app.route('/editar/<int:id_tarefa>', methods=['GET', 'POST'])
 def editar(id_tarefa):
-
-
-    """definição de uma variavel que busca tarefa."""
     tarefa = Tarefa.carregarTarefa(id_tarefa)
 
     if tarefa is None:
         return redirect(url_for('home'))
 
-    """Se o ID não existir, o usuário volta para a página inicial."""
-
     if request.method == 'POST':
-
         titulo_form = request.form['tituloTarefa']
         data_conclusao_form = request.form['dataConclusao']
 
@@ -89,7 +75,9 @@ def editar(id_tarefa):
 
 @app.route('/delete/<int:id>')
 def apagar_id_especificado(id):
-    pass
+    Tarefa.apagarTarefa(id)
+
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':

@@ -1,14 +1,12 @@
 from os import getenv
 from pathlib import Path
 
-
 import mysql.connector as mc
 from dotenv import load_dotenv
 from mysql.connector import Error
 
 
-class Database: 
-    """Classe que gerencia conexões e operações com um banco de daddo MySQL"""
+class Database:
     def __init__(self):
         load_dotenv()
         self.host = getenv('DB_HOST')
@@ -19,7 +17,6 @@ class Database:
         self.cursor = None
 
     def conectar(self) -> None:
-        """Estabelece uma conexão com o banco de dados MySQL"""
         try:
             self.connection = mc.connect(
                 host = self.host,
@@ -37,7 +34,6 @@ class Database:
             self.cursor = None
 
     def desconectar(self) -> None:
-        """Encerra a conexão com o banco de dados e o cursor, se existirem"""
         if self.cursor:
             self.cursor.close()
         if self.connection:
@@ -45,8 +41,6 @@ class Database:
         print('Conexão encerrada com sucesso!')
 
     def executar(self, sql, params = None):
-        """Executa uma instrução no banco de dados."""
-
         if not self.connection or not self.cursor:
             print ('Conexão ao banco de dados não estabelecida')
             return
@@ -75,9 +69,8 @@ class Database:
 BASE_DIR = Path(__file__).resolve().parent.parent
 SQL_PATH = BASE_DIR / "data" / "tarefas.sql"
 
-def init_db(sql_filepath=SQL_PATH):
-    """Função responsável por inicializar o scheme (database) no banco de dados."""
 
+def init_db(sql_filepath=SQL_PATH):
     load_dotenv()
 
     try:
@@ -88,7 +81,6 @@ def init_db(sql_filepath=SQL_PATH):
         )
         cursor = conexao.cursor()
 
-        #Leitura do arquivo de criação do banco
         with open(sql_filepath, 'r', encoding='utf-8') as arquivo:
             sql = arquivo.read()
 
@@ -103,14 +95,3 @@ def init_db(sql_filepath=SQL_PATH):
         print(f'Erro no banco de dados: {e}')
     except FileNotFoundError:
         print('O arquivo especifico não pôde ser encontrado')
-
-
-
-"""Área 51
-Tudo o que for escrito dessa área
-será lido e executado como string.
-"""
-# db = Database()
-# db.conectar()
-# print(db.executar('show tables;'))
-# db.desconectar()

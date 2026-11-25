@@ -1,22 +1,15 @@
-
 from datetime import datetime
 
 from tarefas.models.database import Database
 
 
 class Tarefa:
-    """Provê métodos para armazenar, recuperar e processar os dados das tarefas
-    criadas a partir do formulário principal.
-    """
-
     def __init__(self, titulo, id=None, data_conclusao=None):
         self.id = id
         self.titulo = titulo
         self.data_conclusao = data_conclusao
 
     def salvarTarefa(self):
-        """Salva a tarefa no banco de dados."""
-
         sql = '''
             INSERT INTO tarefa
             (id_tarefa, titulo_tarefa, data_tarefa)
@@ -34,8 +27,6 @@ class Tarefa:
 
     @staticmethod
     def listarTarefas() -> list:
-        """Lista as tarefas cadastradas."""
-
         sql = '''
             SELECT
                 id_tarefa,
@@ -52,8 +43,6 @@ class Tarefa:
 
     @staticmethod
     def carregarTarefa(id_tarefa):
-        """Carrega uma tarefa específica do banco de dados."""
-
         sql = '''
             SELECT
                 id_tarefa,
@@ -80,8 +69,6 @@ class Tarefa:
         return None
 
     def atualizarTarefa(self):
-        """Atualiza uma tarefa no banco de dados."""
-
         sql = '''
             UPDATE tarefa
             SET
@@ -101,8 +88,6 @@ class Tarefa:
 
     @staticmethod
     def apagarTarefa(id_tarefa):
-        """Apaga uma tarefa do banco de dados."""
-
         sql = 'DELETE FROM tarefa WHERE id_tarefa = %s;'
 
         params = (id_tarefa,)
